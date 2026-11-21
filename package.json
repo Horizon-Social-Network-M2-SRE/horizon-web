@@ -8,11 +8,17 @@
   },
   "scripts": {
     "prepare": "husky",
-    "commitlint": "commitlint --edit"
+    "commitlint": "commitlint --edit",
+    "api:sync": "node scripts/sync-openapi.mjs",
+    "api:generate": "openapi-typescript openapi/openapi.json -o src/lib/api/schema.d.ts"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "openapi-typescript": "^7.13.0"
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.17.0"
   }
 }
