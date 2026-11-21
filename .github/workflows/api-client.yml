@@ -1,0 +1,46 @@
+name: api-client
+
+# The typed client must match the backend contract.
+# Fails when openapi/openapi.json or src/lib/api/schema.d.ts differ from what the backend publishes.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    name: API client matches the backend contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Sync the contract from horizon-backend main
+        run: npm run api:sync
+
+      - name: Regenerate the client
+        run: |
+          if [ -f openapi/openapi.json ]; then
+            npm run api:generate
+          else
+            echo "::notice::No contract yet (S1-06 backend); skipping generation"
+          fi
+
+      - name: Fail if the committed client is out of date
+        run: |
+          if [ -n "$(git status --porcelain -- openapi src/lib/api)" ]; then
+            git status --short -- openapi src/lib/api
+            git diff -- openapi src/lib/api | head -100
+            echo "::error::Client out of date. Run 'npm run api:sync && npm run api:generate' and commit."
+            exit 1
+          fi
