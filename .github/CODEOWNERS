@@ -1,0 +1,4 @@
+# Review rules: docs/process/commits-and-reviews.md in horizon-documentation
+*                   @Horizon-Social-Network-M2-SRE/web @Horizon-Social-Network-M2-SRE/backend
+/.github/workflows/ @Horizon-Social-Network-M2-SRE/platform @Horizon-Social-Network-M2-SRE/web
+/Dockerfile         @Horizon-Social-Network-M2-SRE/web @Horizon-Social-Network-M2-SRE/platform
