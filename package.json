@@ -10,13 +10,16 @@
     "prepare": "husky",
     "commitlint": "commitlint --edit",
     "api:sync": "node scripts/sync-openapi.mjs",
-    "api:generate": "openapi-typescript openapi/openapi.json -o src/lib/api/schema.d.ts"
+    "api:generate": "openapi-typescript openapi/openapi.json -o src/lib/api/schema.d.ts",
+    "typecheck:api": "tsc --noEmit --strict --target es2022 --module esnext --moduleResolution bundler --skipLibCheck --types node src/lib/api/client.ts"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
+    "@types/node": "^26.6.7",
     "husky": "^9.1.7",
-    "openapi-typescript": "^7.13.0"
+    "openapi-typescript": "^7.13.0",
+    "typescript": "^7.0.2"
   },
   "dependencies": {
     "openapi-fetch": "^0.17.0"

@@ -36,6 +36,9 @@ jobs:
             echo "::notice::No contract yet (S1-06 backend); skipping generation"
           fi
 
+      - name: Type-check the API client
+        run: npm run typecheck:api
+
       - name: Fail if the committed client is out of date
         run: |
           if [ -n "$(git status --porcelain -- openapi src/lib/api)" ]; then
