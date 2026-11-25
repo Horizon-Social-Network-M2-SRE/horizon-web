@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Self-contained server for the Docker image (served on port 3000 behind the gateway).
+  output: "standalone",
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
