@@ -1,0 +1,36 @@
+name: docker
+
+# The image the Compose stack (horizon-infrastructure) and the cluster run: it must build,
+# start as a non-root user and serve the app on port 3000.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    name: Image builds and serves on port 3000
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t horizon-web:ci .
+
+      - name: Start it
+        run: docker run -d --name web -p 3000:3000 horizon-web:ci
+
+      - name: Sign-in page answers
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:3000/login | grep -q "Sign in"; then exit 0; fi
+            sleep 1
+          done
+          docker logs web
+          exit 1
+
+      - name: Runs as non-root
+        run: test "$(docker exec web id -u)" != "0"
