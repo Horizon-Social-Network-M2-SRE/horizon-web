@@ -1,0 +1,32 @@
+name: web-ci
+
+# Fast checks on every pull request: lint and the API client types.
+# The production build runs in docker.yml, so it is not repeated here.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint and type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check the API client
+        run: npm run typecheck:api
