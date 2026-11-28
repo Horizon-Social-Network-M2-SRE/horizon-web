@@ -21,7 +21,11 @@ ENV NODE_ENV=production \
     PORT=3000 \
     HOSTNAME=0.0.0.0
 WORKDIR /app
-RUN addgroup --system --gid 10001 app \
+# The standalone server runs with node only: drop npm, npx and corepack (their bundled dependencies
+# fail the image scan) and take the Alpine security fixes newer than the base image.
+RUN apk upgrade --no-cache \
+ && rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
+ && addgroup --system --gid 10001 app \
  && adduser --system --uid 10001 --ingroup app --no-create-home app
 COPY --from=build --chown=10001:10001 /app/.next/standalone ./
 COPY --from=build --chown=10001:10001 /app/.next/static ./.next/static
