@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   ci:
-    uses: Horizon-Social-Network-M2-SRE/horizon-infrastructure/.github/workflows/node-ci.yml@main
+    uses: Horizon-Social-Network-M2-SRE/horizon-infrastructure/.github/workflows/node-ci.yml@feature/1-reusable-ci
     permissions:
       contents: read
       packages: write
