@@ -1,7 +1,9 @@
 name: web-ci
 
-# Fast checks on every pull request: lint and the API client types.
-# The production build runs in docker.yml, so it is not repeated here.
+# Shared checks from horizon-infrastructure (S1-02): lint, test, build, gitleaks, then the image
+# built, scanned with Trivy and pushed to GHCR (sha-<commit> and main) on main.
+# Check names: ci / lint, ci / test, ci / build, ci / secrets, ci / image.
+# The API client types are checked by api-client.yml; the image runtime by docker.yml.
 on:
   pull_request:
     branches: [main]
@@ -12,21 +14,8 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    name: Lint and type-check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Type-check the API client
-        run: npm run typecheck:api
+  ci:
+    uses: Horizon-Social-Network-M2-SRE/horizon-infrastructure/.github/workflows/node-ci.yml@main
+    permissions:
+      contents: read
+      packages: write
